@@ -2,3 +2,4 @@ streamlit
 langchain
 langchain-community
 faiss-cpu
+pymupdf
