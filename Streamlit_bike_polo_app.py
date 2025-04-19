@@ -66,7 +66,7 @@ Agent Cooper's Response:
 
 
 # Load PDF path
-pdf_path = "/home/khadas/Downloads/EHBA ruleset 230712.pdf"  
+pdf_path = "/EHBA ruleset 230712.pdf"  
 
 
 # -------------------------------- Display PDF --------------------
