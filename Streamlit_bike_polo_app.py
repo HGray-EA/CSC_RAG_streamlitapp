@@ -4,8 +4,8 @@ from langchain_community.vectorstores import FAISS
 from langchain.text_splitter import RecursiveCharacterTextSplitter
 from langchain_community.llms import HuggingFaceEndpoint 
 from langchain.chains import RetrievalQA
-from langchain_community.document_loaders import PyPDFLoader
-from langchain.prompts import PromptTemplate
+ffrom langchain.prompts import PromptTemplate
+from langchain_community.document_loaders import PyMuPDFLoader
 import base64
 import requests
 
@@ -14,15 +14,18 @@ st.set_page_config(page_title="PDF querier", layout="wide")
 # Hugging Face API Key
 HUGGINGFACEHUB_API_TOKEN = st.secrets["huggingface"]["token"]
 
-# ---------------------- Load and Split PDF ---------------------
+# ---------------------- Load and Split PDF ------------------------
 def process_pdf(pdf_bytes):
-    loader = PyPDFLoader.from_bytes(pdf_bytes)  # Use from_bytes to load directly from memory
+    loader = PyMuPDFLoader.from_bytes(pdf_bytes)  # Uses in-memory bytes
     pages = loader.load_and_split()
-
+    return pages
+    
     # Chunk the text
     text_splitter = RecursiveCharacterTextSplitter(chunk_size=500, chunk_overlap=50)
     chunks = text_splitter.split_documents(pages)
     return chunks
+
+
 
 # -----------------------  Build Vector Store ----------------------
 def build_vector_store(chunks):
