@@ -1,4 +1,4 @@
 streamlit
 langchain
 langchain-community
-faiss-cpu==1.7.2
+faiss-cpu==1.7.1
