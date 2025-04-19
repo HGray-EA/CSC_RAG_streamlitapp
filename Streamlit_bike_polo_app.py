@@ -66,7 +66,8 @@ Agent Cooper's Response:
 
 
 # Load PDF path
-pdf_path = "/EHBA ruleset 230712.pdf"  
+pdf_path = "https://raw.githubusercontent.com/HGray-EA/BikePoloStreamlitApp/main/EHBA%20ruleset%20230712.pdf"
+
 
 
 # -------------------------------- Display PDF --------------------
