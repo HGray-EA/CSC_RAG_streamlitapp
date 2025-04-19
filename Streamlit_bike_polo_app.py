@@ -9,6 +9,7 @@ from langchain.prompts import PromptTemplate
 import os
 import base64
 import tempfile  
+import requests
 
 st.set_page_config(page_title="PDF querier", layout="wide")
 
@@ -66,8 +67,8 @@ Agent Cooper's Response:
 
 
 # Load PDF path
-pdf_path = "https://raw.githubusercontent.com/HGray-EA/BikePoloStreamlitApp/main/EHBA%20ruleset%20230712.pdf"
-
+pdf_url = "https://raw.githubusercontent.com/HGray-EA/BikePoloStreamlitApp/main/EHBA%20ruleset%20230712.pdf"
+pdf_path = requests.get(pdf_url)
 
 
 # -------------------------------- Display PDF --------------------
