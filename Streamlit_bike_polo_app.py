@@ -124,6 +124,3 @@ if response.status_code == 200:
                     """, unsafe_allow_html=True)
 else:
     st.error(f"Failed to download PDF. Status code: {response.status_code}")
-
-                        </div>
-                    """, unsafe_allow_html=True)
