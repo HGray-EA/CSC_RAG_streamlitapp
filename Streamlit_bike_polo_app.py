@@ -6,9 +6,7 @@ from langchain_community.llms import HuggingFaceEndpoint
 from langchain.chains import RetrievalQA
 from langchain_community.document_loaders import PyPDFLoader
 from langchain.prompts import PromptTemplate
-import os
 import base64
-import tempfile  
 import requests
 
 st.set_page_config(page_title="PDF querier", layout="wide")
@@ -17,8 +15,8 @@ st.set_page_config(page_title="PDF querier", layout="wide")
 HUGGINGFACEHUB_API_TOKEN = st.secrets["huggingface"]["token"]
 
 # ---------------------- Load and Split PDF ---------------------
-def process_pdf(pdf_path):
-    loader = PyPDFLoader(pdf_path)
+def process_pdf(pdf_bytes):
+    loader = PyPDFLoader.from_bytes(pdf_bytes)  # Use from_bytes to load directly from memory
     pages = loader.load_and_split()
 
     # Chunk the text
@@ -55,33 +53,22 @@ Agent Cooper's Response:
 )
 
 
-# Can add a banner 
-
-# Banner
-#image_url = "https://avatars.githubusercontent.com/u/123268593?v=4"  # URL of your image or local path
-#st.markdown(f"""
-#    <div style="text-align: center;">
-#        <img src="{image_url}" width="100%" alt="Banner Image">
-#    </div>
-#""", unsafe_allow_html=True)
-
-
-# Load PDF path
+# Load PDF from GitHub
 pdf_url = "https://raw.githubusercontent.com/HGray-EA/BikePoloStreamlitApp/main/EHBA%20ruleset%20230712.pdf"
-pdf_path = requests.get(pdf_url)
+response = requests.get(pdf_url)
 
+# Check if the request was successful
+if response.status_code == 200:
+    pdf_bytes = response.content  # Directly store the binary content of the PDF
 
-# -------------------------------- Display PDF --------------------
-with open(pdf_path, "rb") as pdf_file:
-    pdf_bytes = pdf_file.read()
+    # -------------------------------- Display PDF --------------------
     pdf_base64 = base64.b64encode(pdf_bytes).decode('utf-8')
-
     pdf_display = f'<div style="display: flex; justify-content: center;"><iframe src="data:application/pdf;base64,{pdf_base64}" width="700" height="600"></iframe></div>'
     st.markdown(pdf_display, unsafe_allow_html=True)
 
     # Process and index the PDF
     with st.spinner("Processing PDF..."):
-        chunks = process_pdf(pdf_path)
+        chunks = process_pdf(pdf_bytes)  # Pass the PDF bytes directly
         vectorstore = build_vector_store(chunks)
         retriever = vectorstore.as_retriever()
 
@@ -133,5 +120,10 @@ with open(pdf_path, "rb") as pdf_file:
                             <div style="max-width: 60%; background-color: #9f4129; border-radius: 10px; padding: 10px; margin-left: 5px;">
                                 <strong>{speaker}:</strong> {msg}
                             </div>
+                        </div>
+                    """, unsafe_allow_html=True)
+else:
+    st.error(f"Failed to download PDF. Status code: {response.status_code}")
+
                         </div>
                     """, unsafe_allow_html=True)
