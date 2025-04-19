@@ -8,6 +8,7 @@ from langchain.prompts import PromptTemplate
 from langchain_community.document_loaders import PyMuPDFLoader
 import base64
 import requests
+import tempfile
 
 st.set_page_config(page_title="PDF querier", layout="wide")
 
@@ -16,16 +17,18 @@ HUGGINGFACEHUB_API_TOKEN = st.secrets["huggingface"]["token"]
 
 # ---------------------- Load and Split PDF ------------------------
 def process_pdf(pdf_bytes):
-    loader = PyMuPDFLoader.from_bytes(pdf_bytes)  # Uses in-memory bytes
+    # Save to a temporary file
+    with tempfile.NamedTemporaryFile(delete=False, suffix=".pdf") as tmp_file:
+        tmp_file.write(pdf_bytes)
+        tmp_path = tmp_file.name
+
+    loader = PyMuPDFLoader(tmp_path)
     pages = loader.load_and_split()
-    return pages
-    
+
     # Chunk the text
     text_splitter = RecursiveCharacterTextSplitter(chunk_size=500, chunk_overlap=50)
     chunks = text_splitter.split_documents(pages)
     return chunks
-
-
 
 # -----------------------  Build Vector Store ----------------------
 def build_vector_store(chunks):
@@ -34,7 +37,6 @@ def build_vector_store(chunks):
     return vectorstore
 
 # -------------------------- Customise agent response ----------------------
-#  We make sure to cite rules
 prompt_template = PromptTemplate(
     input_variables=["context", "question"],
     template="""
@@ -55,14 +57,12 @@ Agent Cooper's Response:
 #"""
 )
 
-
 # Load PDF from GitHub
 pdf_url = "https://raw.githubusercontent.com/HGray-EA/BikePoloStreamlitApp/main/EHBA%20ruleset%20230712.pdf"
 response = requests.get(pdf_url)
 
-# Check if the request was successful
 if response.status_code == 200:
-    pdf_bytes = response.content  # Directly store the binary content of the PDF
+    pdf_bytes = response.content
 
     # -------------------------------- Display PDF --------------------
     pdf_base64 = base64.b64encode(pdf_bytes).decode('utf-8')
@@ -71,11 +71,10 @@ if response.status_code == 200:
 
     # Process and index the PDF
     with st.spinner("Processing PDF..."):
-        chunks = process_pdf(pdf_bytes)  # Pass the PDF bytes directly
+        chunks = process_pdf(pdf_bytes)
         vectorstore = build_vector_store(chunks)
         retriever = vectorstore.as_retriever()
 
-        # Setup the model
         llm = HuggingFaceEndpoint(
             repo_id="HuggingFaceH4/zephyr-7b-beta",
             task="text-generation", 
@@ -93,7 +92,6 @@ if response.status_code == 200:
 
         st.success("PDF loaded and indexed. You can now ask questions!")
 
-        # Chat UI
         st.subheader("Question the document")
         if "chat_history" not in st.session_state:
             st.session_state.chat_history = []
@@ -107,23 +105,23 @@ if response.status_code == 200:
                 st.session_state.chat_history.append(("You", user_input))
                 st.session_state.chat_history.append(("Bike Polo Guru", answer))
 
-            # WhatsApp-style chat layout
-            for speaker, msg in st.session_state.chat_history[::-1]:
-                if speaker == "You":
-                    st.markdown(f"""
-                        <div style="display: flex; justify-content: flex-end; margin-bottom: 10px;">
-                            <div style="max-width: 60%; background-color: #8f9296; border-radius: 10px; padding: 10px; margin-right: 5px; text-align: right;">
-                                <strong>{speaker}:</strong> {msg}
-                            </div>
+        # Chat layout
+        for speaker, msg in st.session_state.chat_history[::-1]:
+            if speaker == "You":
+                st.markdown(f"""
+                    <div style="display: flex; justify-content: flex-end; margin-bottom: 10px;">
+                        <div style="max-width: 60%; background-color: #8f9296; border-radius: 10px; padding: 10px; margin-right: 5px; text-align: right;">
+                            <strong>{speaker}:</strong> {msg}
                         </div>
-                    """, unsafe_allow_html=True)
-                else:
-                    st.markdown(f"""
-                        <div style="display: flex; justify-content: flex-start; margin-bottom: 10px;">
-                            <div style="max-width: 60%; background-color: #9f4129; border-radius: 10px; padding: 10px; margin-left: 5px;">
-                                <strong>{speaker}:</strong> {msg}
-                            </div>
+                    </div>
+                """, unsafe_allow_html=True)
+            else:
+                st.markdown(f"""
+                    <div style="display: flex; justify-content: flex-start; margin-bottom: 10px;">
+                        <div style="max-width: 60%; background-color: #9f4129; border-radius: 10px; padding: 10px; margin-left: 5px;">
+                            <strong>{speaker}:</strong> {msg}
                         </div>
-                    """, unsafe_allow_html=True)
+                    </div>
+                """, unsafe_allow_html=True)
 else:
     st.error(f"Failed to download PDF. Status code: {response.status_code}")
