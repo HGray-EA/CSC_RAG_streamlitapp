@@ -26,15 +26,19 @@ st.markdown(" ")
 HUGGINGFACEHUB_API_TOKEN = st.secrets["huggingface"]["token"]
 
 # ---------------------- Load and Split PDF ---------------------
-def process_pdf(pdf_path):
-    loader = PyPDFLoader(pdf_path)
+def process_pdf(pdf_bytes):
+    # Save to a temporary file
+    with tempfile.NamedTemporaryFile(delete=False, suffix=".pdf") as tmp_file:
+        tmp_file.write(pdf_bytes)
+        tmp_path = tmp_file.name
+
+    loader = PyMuPDFLoader(tmp_path)
     pages = loader.load_and_split()
 
     # Chunk the text
     text_splitter = RecursiveCharacterTextSplitter(chunk_size=500, chunk_overlap=50)
     chunks = text_splitter.split_documents(pages)
     return chunks
-
 # -----------------------  Build Vector Store ----------------------
 def build_vector_store(chunks):
     embeddings = HuggingFaceEmbeddings(model_name="sentence-transformers/all-MiniLM-L6-v2")
@@ -75,14 +79,15 @@ Bike Polo Guru's response:
 
 
 
-# Load PDF path
-pdf_path = "/home/khadas/Downloads/EHBA ruleset 230712.pdf"  
+# Load PDF from GitHub
+pdf_url = "https://raw.githubusercontent.com/HGray-EA/BikePoloStreamlitApp/main/EHBA%20ruleset%20230712.pdf"
+response = requests.get(pdf_url)
+
+if response.status_code == 200:
+    pdf_bytes = response.content
 
 # -------------------------------- Display PDF --------------------
-with open(pdf_path, "rb") as pdf_file:
-    pdf_bytes = pdf_file.read()
     pdf_base64 = base64.b64encode(pdf_bytes).decode('utf-8')
-
     pdf_display = f'<div style="display: flex; justify-content: center;"><iframe src="data:application/pdf;base64,{pdf_base64}" width="700" height="600"></iframe></div>'
     st.markdown(pdf_display, unsafe_allow_html=True)
 
