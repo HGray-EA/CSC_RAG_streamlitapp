@@ -90,21 +90,21 @@ if response.status_code == 200:
 
 # -------------------------------- Display PDF --------------------
 # Have to create custom css class to center pdf viewer
-st.markdown(
-    """
-    <style>
-        .pdf-viewer {
-            display: flex;
-            justify-content: center;
-        }
-    </style>
-    """, unsafe_allow_html=True
-)
-
-# Then wrap the viewer in the div with the class pdf-viewer
-st.markdown('<div class="pdf-viewer">', unsafe_allow_html=True)
-pdf_viewer(pdf_url, width=700, height=800)
-st.markdown('</div>', unsafe_allow_html=True)
+    st.markdown(
+        """
+        <style>
+            .pdf-viewer {
+                display: flex;
+                justify-content: center;
+            }
+        </style>
+        """, unsafe_allow_html=True
+    )
+    
+    # Then wrap the viewer in the div with the class pdf-viewer
+    st.markdown('<div class="pdf-viewer">', unsafe_allow_html=True)
+    pdf_viewer(pdf_url, width=700, height=800)
+    st.markdown('</div>', unsafe_allow_html=True)
 
     # Process and index the PDF
     with st.spinner("Processing PDF..."):
