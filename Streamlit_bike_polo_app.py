@@ -89,23 +89,19 @@ if response.status_code == 200:
     pdf_bytes = response.content
 
 # -------------------------------- Display PDF --------------------
-# Have to create custom css class to center pdf viewer
-#    st.markdown(
-#    """
-#    <style>
-#        /* Center all iframes, especially the one used by pdf_viewer */
-#        iframe {
-#            display: block;
-#            margin-left: auto;
-#            margin-right: auto;
-#            border: none;
-#            border-radius: 12px;
-#            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
-#        }
-#    </style>
-#    """,
-#    unsafe_allow_html=True
-#)
+#  center the pdf iframe using custom css
+    st.markdown(
+        """
+        <style>
+            iframe {
+                display: block;
+                margin-left: auto;
+                margin-right: auto;
+            }
+        </style>
+        """,
+        unsafe_allow_html=True
+    )
 
     
     # Then wrap the viewer in the div with the class pdf-viewer
