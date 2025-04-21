@@ -1,4 +1,5 @@
 import streamlit as st
+from streamlit_pdf_viewer import pdf_viewer
 from langchain_community.embeddings import HuggingFaceEmbeddings
 from langchain_community.vectorstores import FAISS
 from langchain.text_splitter import RecursiveCharacterTextSplitter
@@ -88,9 +89,10 @@ if response.status_code == 200:
     pdf_bytes = response.content
 
 # -------------------------------- Display PDF --------------------
-    pdf_base64 = base64.b64encode(pdf_bytes).decode('utf-8')
-    pdf_display = f'<div style="display: flex; justify-content: center;"><iframe src="data:application/pdf;base64,{pdf_base64}" width="700" height="600"></iframe></div>'
-    st.markdown(pdf_display, unsafe_allow_html=True)
+#     pdf_base64 = base64.b64encode(pdf_bytes).decode('utf-8')
+    pdf_viewer(pdf_bytes)
+ #    pdf_display = f'<div style="display: flex; justify-content: center;"><iframe src="data:application/pdf;base64,{pdf_base64}" width="700" height="600"></iframe></div>'
+  #   st.markdown(pdf_display, unsafe_allow_html=True)
 
     # Process and index the PDF
     with st.spinner("Processing PDF..."):
