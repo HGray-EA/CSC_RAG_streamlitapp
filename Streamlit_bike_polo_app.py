@@ -7,7 +7,6 @@ from langchain_community.llms import HuggingFaceEndpoint
 from langchain.chains import RetrievalQA
 from langchain_community.document_loaders import PyMuPDFLoader
 from langchain.prompts import PromptTemplate
-from sentence_transformers import SentenceTransformer
 import os
 import base64
 import tempfile  
