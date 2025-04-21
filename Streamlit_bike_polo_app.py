@@ -28,14 +28,6 @@ st.markdown(" ")
 HUGGINGFACEHUB_API_TOKEN = st.secrets["huggingface"]["token"]
 
 # ---------------------- Load and Split PDF ---------------------
-# def process_pdf(pdf_bytes):
-#     loader = PyPDFloader.from_bytes(pdf_bytes)
-#     pages = loader.load_and_split()
- # Chunk the text
-#     text_splitter = RecursiveCharacterTextSplitter(chunk_size=500, chunk_overlap=50)
-#     chunks = text_splitter.split_documents(pages)
-#     return chunks
-
 
 def process_pdf(pdf_bytes):
     with tempfile.NamedTemporaryFile(delete=False, suffix=".pdf") as tmp_file:
@@ -110,7 +102,7 @@ if response.status_code == 200:
         # Center the pdf_viewer using Streamlit columns & display
     col1, col2, col3 = st.columns([1, 2, 1])
     with col2:
-        pdf_viewer(tmp_pdf_path, height=600, width=800)
+        pdf_viewer(tmp_pdf_path, height=500, width=900)
 
     
     # Process and index the PDF
