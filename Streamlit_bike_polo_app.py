@@ -7,6 +7,7 @@ from langchain_community.llms import HuggingFaceEndpoint
 from langchain.chains import RetrievalQA
 from langchain_community.document_loaders import PyMuPDFLoader
 from langchain.prompts import PromptTemplate
+from sentence_transformers import SentenceTransformer
 import os
 import base64
 import tempfile  
@@ -43,7 +44,14 @@ def process_pdf(pdf_bytes):
     return chunks
 # -----------------------  Build Vector Store ----------------------
 def build_vector_store(chunks):
+    # Force the model to run on CPU (for Streamlit Cloud)
+    device = "cpu"  # Ensure we are using the CPU
+
     embeddings = HuggingFaceEmbeddings(model_name="sentence-transformers/all-MiniLM-L6-v2")
+    # Explicitly set the model to use CPU
+    embeddings.client = SentenceTransformer(
+        "sentence-transformers/all-MiniLM-L6-v2", device=device
+    )
     vectorstore = FAISS.from_documents(chunks, embeddings)
     return vectorstore
 
