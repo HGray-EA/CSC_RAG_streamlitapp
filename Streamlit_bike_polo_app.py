@@ -28,10 +28,27 @@ st.markdown(" ")
 HUGGINGFACEHUB_API_TOKEN = st.secrets["huggingface"]["token"]
 
 # ---------------------- Load and Split PDF ---------------------
-def process_pdf(pdf_bytes):
-    loader = PyPDFloader.from_bytes(pdf_bytes)
-    pages = loader.load_and_split()
+# def process_pdf(pdf_bytes):
+#     loader = PyPDFloader.from_bytes(pdf_bytes)
+#     pages = loader.load_and_split()
  # Chunk the text
+#     text_splitter = RecursiveCharacterTextSplitter(chunk_size=500, chunk_overlap=50)
+#     chunks = text_splitter.split_documents(pages)
+#     return chunks
+
+
+def process_pdf(pdf_bytes):
+    with tempfile.NamedTemporaryFile(delete=False, suffix=".pdf") as tmp_file:
+        tmp_file.write(pdf_bytes)
+        tmp_pdf_path = tmp_file.name
+    
+    # Use PyMuPDFLoader correctly by loading the temporary PDF file
+    loader = PyMuPDFLoader(tmp_pdf_path)
+    pages = loader.load()  # This should return the pages as documents
+    if not pages:
+        raise ValueError("No pages were loaded from the PDF.")
+
+    # Chunk the text
     text_splitter = RecursiveCharacterTextSplitter(chunk_size=500, chunk_overlap=50)
     chunks = text_splitter.split_documents(pages)
     return chunks
