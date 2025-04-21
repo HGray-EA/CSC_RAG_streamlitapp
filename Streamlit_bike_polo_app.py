@@ -93,7 +93,7 @@ if response.status_code == 200:
 
     # Process and index the PDF
     with st.spinner("Processing PDF..."):
-        chunks = process_pdf(pdf_path)
+        chunks = process_pdf(pdf_bytes)
         vectorstore = build_vector_store(chunks)
         retriever = vectorstore.as_retriever()
 
