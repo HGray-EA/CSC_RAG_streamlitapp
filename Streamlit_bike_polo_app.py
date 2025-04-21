@@ -18,7 +18,7 @@ st.markdown(
     unsafe_allow_html=True
 )
 st.markdown(
-    "<p style='text-align: center;'>Discover the rules of hardcourt bike polo! <br>" \
+    "<p style='text-align: center;'>Discover the rules of hardcourt bike polo- question the ruleset below! <br>" \
     "This app was built using <a href='https://streamlit.io/'>Streamlit</a>" \
     " and the Zephyr 7b-beta llm from <a href='https://huggingface.co/HuggingFaceH4/zephyr-7b-beta'>HuggingFace</a>.",
     unsafe_allow_html=True
