@@ -9,6 +9,7 @@ from langchain.prompts import PromptTemplate
 import os
 import base64
 import tempfile  
+import requests
 
 st.set_page_config(page_title="Bike Polo Ruleset llm", layout="wide")
 st.markdown(
