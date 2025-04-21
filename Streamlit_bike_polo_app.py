@@ -102,7 +102,7 @@ if response.status_code == 200:
         # Center the pdf_viewer using Streamlit columns & display
     col1, col2, col3 = st.columns([1, 2, 1])
     with col2:
-        pdf_viewer(tmp_pdf_path, height=700, width=900)
+        pdf_viewer(tmp_pdf_path, height=700, width=890)
 
     
     # Process and index the PDF
