@@ -114,7 +114,7 @@ if response.status_code == 200:
         tmp_pdf_path = tmp_viewer_file.name
     
         # Display pdf
-          pdf_viewer(tmp_pdf_path, width=700, height=800)
+        pdf_viewer(tmp_pdf_path, width=700, height=800)
 
     
         # Process and index the PDF
