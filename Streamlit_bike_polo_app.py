@@ -30,28 +30,17 @@ HUGGINGFACEHUB_API_TOKEN = st.secrets["huggingface"]["token"]
 
 # ---------------------- Load and Split PDF ---------------------
 def process_pdf(pdf_bytes):
-    # Save to a temporary file
-    with tempfile.NamedTemporaryFile(delete=False, suffix=".pdf") as tmp_file:
-        tmp_file.write(pdf_bytes)
-        tmp_path = tmp_file.name
-
-    loader = PyMuPDFLoader(tmp_path)
+    loader = PyPDFloader.from_bytes(pdf_bytes)
     pages = loader.load_and_split()
-
-    # Chunk the text
+ # Chunk the text
     text_splitter = RecursiveCharacterTextSplitter(chunk_size=500, chunk_overlap=50)
     chunks = text_splitter.split_documents(pages)
     return chunks
+
+
 # -----------------------  Build Vector Store ----------------------
 def build_vector_store(chunks):
-    # Force the model to run on CPU (for Streamlit Cloud)
-    device = "cpu"  # Ensure we are using the CPU
-
     embeddings = HuggingFaceEmbeddings(model_name="sentence-transformers/all-MiniLM-L6-v2")
-    # Explicitly set the model to use CPU
-    embeddings.client = SentenceTransformer(
-        "sentence-transformers/all-MiniLM-L6-v2", device=device
-    )
     vectorstore = FAISS.from_documents(chunks, embeddings)
     return vectorstore
 
@@ -110,7 +99,7 @@ if response.status_code == 200:
 
     
     # Process and index the PDF
-    with st.spinner("Processing PDF..."):
+    with st.spinner("Indexing PDF..."):
         chunks = process_pdf(pdf_bytes)
         vectorstore = build_vector_store(chunks)
         retriever = vectorstore.as_retriever()
