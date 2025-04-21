@@ -19,7 +19,7 @@ st.markdown(
 )
 st.markdown(
     "<p style='text-align: center;'>Discover the rules of hardcourt bike polo- question the ruleset below! <br>" \
-    "This app was built using <a href='https://streamlit.io/'>Streamlit</a>" \
+    "This retrieval-augmented-generation app was built using <a href='https://streamlit.io/'>Streamlit</a>" \
     " and the Zephyr 7b-beta llm from <a href='https://huggingface.co/HuggingFaceH4/zephyr-7b-beta'>HuggingFace</a>.",
     unsafe_allow_html=True
 )
@@ -110,7 +110,7 @@ if response.status_code == 200:
         # Center the pdf_viewer using Streamlit columns & display
     col1, col2, col3 = st.columns([1, 2, 1])
     with col2:
-        pdf_viewer(tmp_pdf_path, height=800, width=700)
+        pdf_viewer(tmp_pdf_path, height=600, width=800)
 
     
     # Process and index the PDF
