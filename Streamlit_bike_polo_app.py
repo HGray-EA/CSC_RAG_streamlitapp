@@ -89,27 +89,15 @@ if response.status_code == 200:
     pdf_bytes = response.content
 
 # -------------------------------- Display PDF --------------------
-#  center the pdf iframe using custom css
-    st.markdown(
-        """
-        <style>
-            iframe {
-                display: block;
-                margin-left: auto;
-                margin-right: auto;
-            }
-        </style>
-        """,
-        unsafe_allow_html=True
-    )
 
-    
     # Then wrap the viewer in the div with the class pdf-viewer
     with tempfile.NamedTemporaryFile(delete=False, suffix=".pdf") as tmp_viewer_file:
         tmp_viewer_file.write(pdf_bytes)
         tmp_pdf_path = tmp_viewer_file.name
     
-        # Display pdf
+        # Center the pdf_viewer using Streamlit columns & display
+       col1, col2, col3 = st.columns([1, 2, 1])
+    with col2:
         pdf_viewer(tmp_pdf_path, height=800, width=700)
 
     
