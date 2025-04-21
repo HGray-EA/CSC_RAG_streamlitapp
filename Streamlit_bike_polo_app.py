@@ -107,7 +107,7 @@ if response.status_code == 200:
     with tempfile.NamedTemporaryFile(delete=False, suffix=".pdf") as tmp_viewer_file:
         tmp_viewer_file.write(pdf_bytes)
         tmp_pdf_path = tmp_viewer_file.name
-    
+        
         # Center the pdf_viewer using Streamlit columns & display
     col1, col2, col3 = st.columns([1, 2, 1])
     with col2:
