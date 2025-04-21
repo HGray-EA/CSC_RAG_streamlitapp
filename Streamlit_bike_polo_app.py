@@ -101,62 +101,62 @@ if response.status_code == 200:
         pdf_viewer(tmp_pdf_path, height=800, width=700)
 
     
-        # Process and index the PDF
-        with st.spinner("Processing PDF..."):
-            chunks = process_pdf(pdf_bytes)
-            vectorstore = build_vector_store(chunks)
-            retriever = vectorstore.as_retriever()
-    
-            # Setup the model
-            llm = HuggingFaceEndpoint(
-                repo_id="HuggingFaceH4/zephyr-7b-beta",
-                task="text-generation", 
-                temperature=0.2,
-                huggingfacehub_api_token=HUGGINGFACEHUB_API_TOKEN,
-            )
-    
-            qa_chain = RetrievalQA.from_chain_type(
-                llm=llm,
-                retriever=retriever,
-                chain_type="stuff",
-                chain_type_kwargs={"prompt": prompt_template},
-                return_source_documents=True
-            )
-    
-            st.success("PDF loaded and indexed. You can now ask questions!")
-    
-            # Chat UI
-            st.subheader("Question the document")
-            if "chat_history" not in st.session_state:
-                st.session_state.chat_history = []
-    
-            # Show chat history
-            for speaker, msg in st.session_state.chat_history:
-                if speaker == "You":
-                    with st.chat_message("user"):
-                        st.markdown(msg)
-                else:
-                    with st.chat_message("assistant"):
-                        st.markdown(f"**Bike Polo Guru**\n\n{msg}")
-    
-            # User input
-            user_input = st.chat_input("Ask a question about the rules...")
-    
-            if user_input:
-                # Display user's message
+    # Process and index the PDF
+    with st.spinner("Processing PDF..."):
+        chunks = process_pdf(pdf_bytes)
+        vectorstore = build_vector_store(chunks)
+        retriever = vectorstore.as_retriever()
+
+        # Setup the model
+        llm = HuggingFaceEndpoint(
+            repo_id="HuggingFaceH4/zephyr-7b-beta",
+            task="text-generation", 
+            temperature=0.2,
+            huggingfacehub_api_token=HUGGINGFACEHUB_API_TOKEN,
+        )
+
+        qa_chain = RetrievalQA.from_chain_type(
+            llm=llm,
+            retriever=retriever,
+            chain_type="stuff",
+            chain_type_kwargs={"prompt": prompt_template},
+            return_source_documents=True
+        )
+
+        st.success("PDF loaded and indexed. You can now ask questions!")
+
+        # Chat UI
+        st.subheader("Question the document")
+        if "chat_history" not in st.session_state:
+            st.session_state.chat_history = []
+
+        # Show chat history
+        for speaker, msg in st.session_state.chat_history:
+            if speaker == "You":
                 with st.chat_message("user"):
-                    st.markdown(user_input)
-    
-                # Process with QA chain
-                with st.spinner("Getting response..."):
-                    result = qa_chain({"query": user_input})
-                    answer = result["result"]
-    
-                # Display assistant response
+                    st.markdown(msg)
+            else:
                 with st.chat_message("assistant"):
-                    st.markdown(f"**Bike Polo Guru:**\n\n{answer}")
-    
-                # Save to chat history
-                st.session_state.chat_history.append(("You", user_input))
-                st.session_state.chat_history.append(("Bike Polo Guru", answer))
+                    st.markdown(f"**Bike Polo Guru**\n\n{msg}")
+
+        # User input
+        user_input = st.chat_input("Ask a question about the rules...")
+
+        if user_input:
+            # Display user's message
+            with st.chat_message("user"):
+                st.markdown(user_input)
+
+            # Process with QA chain
+            with st.spinner("Getting response..."):
+                result = qa_chain({"query": user_input})
+                answer = result["result"]
+
+            # Display assistant response
+            with st.chat_message("assistant"):
+                st.markdown(f"**Bike Polo Guru:**\n\n{answer}")
+
+            # Save to chat history
+            st.session_state.chat_history.append(("You", user_input))
+            st.session_state.chat_history.append(("Bike Polo Guru", answer))
     
