@@ -102,9 +102,15 @@ if response.status_code == 200:
     )
     
     # Then wrap the viewer in the div with the class pdf-viewer
+    with tempfile.NamedTemporaryFile(delete=False, suffix=".pdf") as tmp_viewer_file:
+    tmp_viewer_file.write(pdf_bytes)
+    tmp_pdf_path = tmp_viewer_file.name
+
+    # Then display the PDF using the local file path
     st.markdown('<div class="pdf-viewer">', unsafe_allow_html=True)
-    pdf_viewer(pdf_url, width=700, height=800)
+    pdf_viewer(tmp_pdf_path, width=700, height=800)
     st.markdown('</div>', unsafe_allow_html=True)
+
 
     # Process and index the PDF
     with st.spinner("Processing PDF..."):
