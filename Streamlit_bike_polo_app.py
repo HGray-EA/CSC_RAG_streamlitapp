@@ -1,6 +1,6 @@
 import streamlit as st
 from streamlit_pdf_viewer import pdf_viewer
-from langchain_community.embeddings import HuggingFaceEmbeddings
+from langchain.embeddings import HuggingFaceInstructEmbeddings
 from langchain_community.vectorstores import FAISS
 from langchain.text_splitter import RecursiveCharacterTextSplitter
 from langchain_community.llms import HuggingFaceEndpoint 
@@ -47,10 +47,18 @@ def process_pdf(pdf_bytes):
 
 
 # -----------------------  Build Vector Store ----------------------
+
 def build_vector_store(chunks):
-    embeddings = HuggingFaceEmbeddings(model_name="sentence-transformers/all-MiniLM-L6-v2")
+    embeddings = HuggingFaceInstructEmbeddings(
+        model_name="HuggingFaceH4/zephyr-7b-beta",
+        api_key=HUGGINGFACEHUB_API_TOKEN,
+    )
     vectorstore = FAISS.from_documents(chunks, embeddings)
     return vectorstore
+#def build_vector_store(chunks):
+ #   embeddings = HuggingFaceEmbeddings(model_name="sentence-transformers/all-MiniLM-L6-v2")
+  #  vectorstore = FAISS.from_documents(chunks, embeddings)
+   # return vectorstore
 
 # -------------------------- Customise agent response ----------------------
 #  We make sure to cite rules
