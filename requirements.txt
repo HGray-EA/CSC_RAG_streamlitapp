@@ -6,3 +6,4 @@ faiss-cpu
 pymupdf
 sentence-transformers
 torch
+huggingface-hub
