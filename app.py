@@ -108,7 +108,7 @@ if response.status_code == 200:
         # Center the pdf_viewer using Streamlit columns & display
     col1, col2, col3 = st.columns([1, 2, 1])
     with col2:
-        pdf_viewer(tmp_pdf_path, height=800, width=700)
+        pdf_viewer(tmp_pdf_path, height=600, width=900)
 
     
     # Process and index the PDF
@@ -150,7 +150,7 @@ if response.status_code == 200:
                     st.markdown(f"**AI Agent**\n\n{msg}")
 
         # User input
-        user_input = st.chat_input("Ask a question about the rules...")
+        user_input = st.chat_input("Ask a question about the framework...")
 
         if user_input:
             # Display user's message
