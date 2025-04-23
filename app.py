@@ -14,12 +14,12 @@ import requests
 
 st.set_page_config(page_title="Supporting Citizen Science", layout="wide")
 st.markdown(
-    "<h1 style='text-align: center;'>Query the technical advisory framework</h1>",
+    "<h1 style='text-align: center;'>EA Supporting Citizen Science TAF</h1>",
     unsafe_allow_html=True
 )
 st.markdown(
-    "<p style='text-align: center;'>Got a question about the Supporting Citizen Science technical advisory framework? <br>" \
-    "Use this retrieval-augmented-generation app to question it below!",
+    "<p style='text-align: center;'>Got a question about the EA's Supporting Citizen Science technical advisory framework? <br>" \
+    "Use this app to question it below!",
     unsafe_allow_html=True
 )
 st.markdown(" ")
