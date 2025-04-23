@@ -69,7 +69,7 @@ Please answer the question based on the provided context in clear, concise, and 
 Only use information present in the context and **do not make anything up**. 
 If the answer is not available in the context respond with: "That's a bit of a stretch- that information isn't included in this document"
 
-When possible, **quote chapters and page numbers where the information was found".
+When possible, **quote page numbers where the information was found".
 
 #Context:
 #{context}
