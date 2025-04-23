@@ -147,7 +147,7 @@ if response.status_code == 200:
                     st.markdown(msg)
             else:
                 with st.chat_message("assistant"):
-                    st.markdown(f"**AI Agent**\n\n{msg}")
+                    st.markdown(f"**Citizen Science Guru**\n\n{msg}")
 
         # User input
         user_input = st.chat_input("Ask a question about the framework...")
@@ -164,9 +164,9 @@ if response.status_code == 200:
 
             # Display assistant response
             with st.chat_message("assistant"):
-                st.markdown(f"**AI Agent:**\n\n{answer}")
+                st.markdown(f"**Citizen Science Guru:**\n\n{answer}")
 
             # Save to chat history
             st.session_state.chat_history.append(("You", user_input))
-            st.session_state.chat_history.append(("AI Agent", answer))
+            st.session_state.chat_history.append(("Citizen Science Guru", answer))
     
