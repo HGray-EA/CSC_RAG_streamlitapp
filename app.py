@@ -65,8 +65,11 @@ prompt_template = PromptTemplate(
     input_variables=["context", "question"],
     template="""
 
-Please answer the question based on the provided context in clear, concise, and readable text. Quote chapters and page numbers you find your information on.
-Use the provided context to answer the question
+Please answer the question based on the provided context in clear, concise, and readable text. 
+Only use information present in the context and **do not make anything up**. 
+If the answer is not available in the context respond with: "That's a bit of a stretch- that information isn't included in this document"
+
+When possible, **quote chapters and page numbers where the information was found".
 
 #Context:
 #{context}
