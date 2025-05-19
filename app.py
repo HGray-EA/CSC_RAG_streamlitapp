@@ -1,6 +1,7 @@
 import streamlit as st
+import sentence-transformers
 from streamlit_pdf_viewer import pdf_viewer
-from langchain_community.embeddings import HuggingFaceHubEmbeddings
+from langchain_community.embeddings import HuggingFaceEmbeddings #HuggingFaceHubEmbeddings
 from langchain_community.vectorstores import FAISS
 from langchain.text_splitter import RecursiveCharacterTextSplitter
 from langchain_community.llms import HuggingFaceEndpoint 
@@ -47,17 +48,17 @@ def process_pdf(pdf_bytes):
 
 # -----------------------  Build Vector Store ----------------------
 
-def build_vector_store(chunks):
-    embeddings = HuggingFaceHubEmbeddings(
-        repo_id="sentence-transformers/all-MiniLM-L6-v2",  
-        huggingfacehub_api_token=HUGGINGFACEHUB_API_TOKEN,
-    )
-    vectorstore = FAISS.from_documents(chunks, embeddings)
-    return vectorstore
 #def build_vector_store(chunks):
- #   embeddings = HuggingFaceEmbeddings(model_name="sentence-transformers/all-MiniLM-L6-v2")
-  #  vectorstore = FAISS.from_documents(chunks, embeddings)
+ #   embeddings = HuggingFaceHubEmbeddings(
+  #      repo_id="sentence-transformers/all-MiniLM-L6-v2",  
+   #     huggingfacehub_api_token=HUGGINGFACEHUB_API_TOKEN,
+   # )
+   # vectorstore = FAISS.from_documents(chunks, embeddings)
    # return vectorstore
+def build_vector_store(chunks):
+   embeddings = HuggingFaceEmbeddings(model_name="sentence-transformers/all-MiniLM-L6-v2")
+   vectorstore = FAISS.from_documents(chunks, embeddings)
+   return vectorstore
 
 # -------------------------- Customise agent response ----------------------
 #  We make sure to cite rules
