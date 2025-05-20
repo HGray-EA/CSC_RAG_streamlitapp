@@ -1,5 +1,5 @@
 import streamlit as st
-import sentence-transformers
+import sentence transformers
 from streamlit_pdf_viewer import pdf_viewer
 from langchain_community.embeddings import HuggingFaceEmbeddings #HuggingFaceHubEmbeddings
 from langchain_community.vectorstores import FAISS
